@@ -8,6 +8,9 @@
 * PyTorch only
 * VLLM + PyTorch
 * Llama.cpp + llama-cpp-python
+### 语音转文字模块
+* 目的：识别用户输入的语音指令
+* 实现方案：Whisper
 ### RAG 专业知识模块
 * 目的：降低大模型回答的幻觉，提升准确度
 ### 互联网搜索模块

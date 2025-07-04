@@ -30,7 +30,7 @@ def audio_transcription(input_path:str, output_path:str="./")->str:
     tuple[1] is the sample rate, which is int, and should be 16000, other wise it will lead error
     """
 
-    audio_array = [sf.read(audio) for audio in __folder_path_extract("../../TestMaterial/human_speech/output/")]
+    audio_array = [sf.read(audio) for audio in __folder_path_extract(input_path=input_path)]
     sample_rate = 16000
     # load all audio data with 16000 sample rate, terminate loading process when audio array is empty
     if not audio_array:
