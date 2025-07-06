@@ -1,0 +1,116 @@
+[
+  {
+    "command": "打开车窗",
+    "window_operation": "window",
+    "danger_level": 1,
+    "comment": "行驶中操作可能分散注意力或导致安全风险（如突然开窗影响驾驶稳定性）。"
+  },
+  {
+    "command": "关闭车窗",
+    "window_operation": "window",
+    "danger_level": 1,
+    "comment": "行驶中操作可能因分心或误触引发安全隐患。"
+  },
+  {
+    "command": "紧急避让操作",
+    "window_operation": "safety",
+    "danger_level": 1,
+    "comment": "手动干预自动驾驶系统可能导致系统冲突或误判，需谨慎操作。"
+  },
+  {
+    "command": "修改行驶路线",
+    "window_operation": "navigation",
+    "danger_level": 2,
+    "comment": "行驶中调整路线可能需要频繁查看屏幕，增加分心风险。"
+  },
+  {
+    "command": "调整自动驾驶跟车距离",
+    "window_operation": "autonomous_driving",
+    "danger_level": 2,
+    "comment": "高速或拥堵路段调整参数可能引发系统误判（如急刹或偏离车道）。"
+  },
+  {
+    "command": "启用特斯拉“召唤”功能",
+    "window_operation": "autonomous_driving",
+    "danger_level": 2,
+    "comment": "自动泊车或召唤车辆时需确保周围环境安全，避免碰撞。"
+  },
+  {
+    "command": "观看车载视频",
+    "window_operation": "entertainment",
+    "danger_level": 2,
+    "comment": "严重分散注意力，可能导致反应延迟（需停车后使用）。"
+  },
+  {
+    "command": "切换驾驶模式（节能/运动）",
+    "window_operation": "driving_mode",
+    "danger_level": 3,
+    "comment": "动力输出变化可能影响驾驶稳定性，建议低速或空旷路段操作。"
+  },
+  {
+    "command": "查询实时路况",
+    "window_operation": "navigation",
+    "danger_level": 3,
+    "comment": "频繁查看路况可能短暂分心，需结合语音提示使用。"
+  },
+  {
+    "command": "语音搜索附近餐厅",
+    "window_operation": "voice_assistant",
+    "danger_level": 3,
+    "comment": "复杂指令可能需要多次交互，增加分心风险。"
+  },
+  {
+    "command": "调整空调温度",
+    "window_operation": "climate",
+    "danger_level": 4,
+    "comment": "基础操作，但频繁调整可能短暂分心。"
+  },
+  {
+    "command": "设置导航目的地",
+    "window_operation": "navigation",
+    "danger_level": 4,
+    "comment": "提前规划路线可降低风险，行驶中确认路线需谨慎。"
+  },
+  {
+    "command": "播放音乐",
+    "window_operation": "entertainment",
+    "danger_level": 4,
+    "comment": "语音控制或预设列表可降低风险，避免行驶中频繁切换。"
+  },
+  {
+    "command": "查看电池电量",
+    "window_operation": "vehicle_status",
+    "danger_level": 5,
+    "comment": "仅用于监控车辆状态，无主动控制风险。"
+  },
+  {
+    "command": "远程启动空调",
+    "window_operation": "remote_control",
+    "danger_level": 5,
+    "comment": "需确保车辆静止并挂入P挡，无直接驾驶风险。"
+  },
+  {
+    "command": "远程锁车",
+    "window_operation": "remote_control",
+    "danger_level": 5,
+    "comment": "车辆静止时操作，不影响驾驶安全。"
+  },
+  {
+    "command": "调整座椅加热",
+    "window_operation": "comfort",
+    "danger_level": 5,
+    "comment": "基础舒适功能，无驾驶风险。"
+  },
+  {
+    "command": "安装第三方应用",
+    "window_operation": "app_store",
+    "danger_level": 5,
+    "comment": "需车辆静止或充电时操作，不影响驾驶。"
+  },
+  {
+    "command": "调整氛围灯颜色",
+    "window_operation": "interior_lighting",
+    "danger_level": 5,
+    "comment": "仅影响车内环境，无安全风险。"
+  }
+]
