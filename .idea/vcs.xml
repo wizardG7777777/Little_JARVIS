@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/models/voice2text/whisper-base" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/models/voice2text/whisper-large-v3-turbo" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/models/voice2text/whisper-tiny" vcs="Git" />
-  </component>
-</project>
