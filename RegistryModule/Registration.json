@@ -1,0 +1,95 @@
+{
+  "modules": [
+    {
+      "module_name": "example_module",
+      "module_path": "/path/to/example_module.py",
+      "functions": [
+        {
+          "function_name": "example_function",
+          "parameters": [
+            {
+              "name": "param1",
+              "type": "str"
+            },
+            {
+              "name": "param2",
+              "type": "int"
+            },
+            {
+              "name": "param3",
+              "type": "list"
+            }
+          ]
+        },
+        {
+          "function_name": "another_function",
+          "parameters": [
+            {
+              "name": "param1",
+              "type": "dict"
+            },
+            {
+              "name": "param2",
+              "type": "bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_name": "utility_module",
+      "module_path": "/path/to/utility_module.py",
+      "functions": [
+        {
+          "function_name": "utility_function",
+          "parameters": [
+            {
+              "name": "param1",
+              "type": "float"
+            },
+            {
+              "name": "param2",
+              "type": "tuple"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_name": "function_registry",
+      "module_path": "C:\\Users\\73524\\Documents\\PythonPrograms\\Little_JARVIS\\RegistryModule\\function_registry.py",
+      "functions": [
+        {
+          "function_name": "windows_operation",
+          "parameters": [
+            {
+              "name": "window_obj",
+              "type": "str"
+            },
+            {
+              "name": "height",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "function_name": "weather.weather_search",
+          "parameters": [
+            {
+              "name": "key_word",
+              "type": "str"
+            },
+            {
+              "name": "web_link",
+              "type": "str"
+            }
+          ]
+        },
+        {
+          "function_name": "spotify.play",
+          "parameters": []
+        }
+      ]
+    }
+  ]
+}
