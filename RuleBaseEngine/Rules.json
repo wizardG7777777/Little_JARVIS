@@ -1,0 +1,208 @@
+{
+  "intent_classifier": {
+    "device_control": [
+      {
+        "pattern": "(打开|关闭|调整|启动|停止|升高|降低)\\s*(空调|车窗|天窗|座椅|雨刮|大灯|氛围灯|后备箱)",
+        "priority": 1,
+        "risk_level": "L4"
+      }
+    ],
+    "info_query": [
+      {
+        "pattern": "(查[看询]|显示|报[告读]|当前|剩余|多少)\\s*(车速|电量|油量|续航|胎压|温度|时间|里程)",
+        "priority": 1,
+        "risk_level": "L5"
+      }
+    ],
+    "daily_chat": [
+      {
+        "pattern": "(你好|早上好|谢谢|再见|讲个笑话|聊天|对话)",
+        "priority": 2,
+        "risk_level": "L5"
+      }
+    ],
+    "complex_command": [
+      {
+        "pattern": "(然后|接着|并且|同时|当.+时)",
+        "priority": 1,
+        "risk_level": "L3"
+      },
+      {
+        "condition": "length > 8",
+        "priority": 2,
+        "risk_level": "L3"
+      },
+      {
+        "pattern": "停止$|全部停止|停止所有操作",
+        "priority": 1,
+        "risk_level": "L2",
+        "type": "global_stop"
+      }
+    ]
+  },
+
+  "syntax_parser": {
+    "entity_patterns": {
+      "device": "(空调|车窗|天窗|座椅加热|雨刮器|大灯|氛围灯|后备箱)",
+      "action": "(打开|关闭|调整|升高|降低|设为)",
+      "value": "(\\d+度?|[高高中低]档|半开)",
+      "sensor": "(车速|电量|油量|胎压|温度|续航|里程)"
+    },
+    "llm_gateway": {
+      "prompt_templates": {
+        "device_control": "用户想{action}设备{device}到{value}状态",
+        "sensor_query": "用户正在查询{sensor}数据",
+        "default": "请处理以下用户请求：{text}"
+      },
+      "risk_level": "L3"
+    }
+  },
+
+  "device_control": {
+    "allowed_devices": [
+      {"name": "空调", "base_risk": "L4"},
+      {"name": "车窗", "base_risk": "L3"},
+      {"name": "天窗", "base_risk": "L2"},
+      {"name": "座椅加热", "base_risk": "L4"},
+      {"name": "氛围灯", "base_risk": "L5"}
+    ],
+    "denied_devices": [
+      {"name": "方向盘", "risk_level": "L1"},
+      {"name": "刹车", "risk_level": "L1"},
+      {"name": "油门", "risk_level": "L1"},
+      {"name": "档位", "risk_level": "L1"},
+      {"name": "手刹", "risk_level": "L1"}
+    ],
+    "command_templates": {
+      "execute": "{device}_{action}({value})",
+      "query": "{device}_status",
+      "stop": "{device}_stop()"
+    }
+  },
+
+  "data_reading": {
+    "allowed_sensors": [
+      {"name": "车速", "risk_level": "L5"},
+      {"name": "电量", "risk_level": "L5"},
+      {"name": "油量", "risk_level": "L5"},
+      {"name": "胎压", "risk_level": "L5"},
+      {"name": "续航", "risk_level": "L5"},
+      {"name": "里程", "risk_level": "L5"}
+    ],
+    "denied_sensors": [
+      {"name": "倒车雷达", "risk_level": "L1"},
+      {"name": "行车记录仪", "risk_level": "L1"}
+    ]
+  },
+
+  "system_function": {
+    "app_launch": [
+      {
+        "pattern": "(导航|地图|导.+到)",
+        "action": "LAUNCH_API: GaodeMap",
+        "risk_level": "L4"
+      },
+      {
+        "pattern": "(播放|暂停|下一[首曲]|上一[首曲])",
+        "action": "LAUNCH_API: NeteaseMusic",
+        "risk_level": "L5"
+      }
+    ],
+    "file_access": [
+      {
+        "pattern": "(播放|打开)\\s*(本地|U盘|SD卡)",
+        "action": "FILE_ACCESS: media_player",
+        "risk_level": "L5"
+      }
+    ],
+    "web_service": [
+      {
+        "pattern": "(天气|气象)",
+        "action": "CLOUD_API: weather_service",
+        "risk_level": "L5"
+      },
+      {
+        "pattern": "(股票|股价|行情)",
+        "action": "CLOUD_API: stock_service",
+        "risk_level": "L4"
+      }
+    ]
+  },
+
+  "dialogue_management": {
+    "context_rules": [
+      {
+        "pattern": "(刚才|之前|上面|继续)",
+        "action": "CONTEXT: maintain",
+        "risk_level": "L5"
+      }
+    ],
+    "termination_rules": [
+      {
+        "pattern": "(退出|结束|关闭对话)",
+        "action": "TERMINATE",
+        "risk_level": "L5"
+      }
+    ]
+  },
+
+  "risk_assessment": {
+    "risk_levels": [
+      {
+        "level": "L1",
+        "description": "最高风险 - 禁止操作",
+        "conditions": [
+          "speed > 80 and device in ['车窗']",
+          "battery_level < 5 and device == '空调'",
+          "speed > 30 and device == '后备箱'"
+        ],
+        "action": "REJECT"
+      },
+      {
+        "level": "L2",
+        "description": "高风险 - 需要二次确认",
+        "conditions": [
+          "speed > 60 and device in ['车窗', '天窗']",
+          "battery_level < 10 and device == '空调'"
+        ],
+        "action": "CONFIRM"
+      },
+      {
+        "level": "L3",
+        "description": "中等风险 - 需要二次确认",
+        "conditions": [
+          "speed > 40 and device in ['车窗', '天窗']",
+          "battery_level < 20 and device == '空调'"
+        ],
+        "action": "CONFIRM"
+      },
+      {
+        "level": "L4",
+        "description": "低风险 - 操作时提醒",
+        "conditions": [
+          "speed > 20 and device in ['车窗', '天窗']",
+          "battery_level < 30 and device == '空调'"
+        ],
+        "action": "WARN"
+      },
+      {
+        "level": "L5",
+        "description": "无风险 - 直接操作",
+        "conditions": [],
+        "action": "ALLOW"
+      }
+    ],
+    "global_stop_conditions": [
+      {
+        "condition": "speed > 100",
+        "risk_level": "L1",
+        "action": "REJECT"
+      },
+      {
+        "condition": "battery_level < 3",
+        "risk_level": "L1",
+        "action": "REJECT"
+      }
+    ]
+  }
+}
