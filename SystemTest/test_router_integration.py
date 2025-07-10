@@ -22,8 +22,12 @@ class TestRouterIntegration(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures before each test method."""
+        # Get the parent directory path and construct the rules path
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        rules_path = os.path.join(parent_dir, "RuleBaseEngine", "Rules.json")
+
         self.mock_router = MockRouter()
-        self.rule_engine = RuleEngine("RuleBaseEngine/Rules.json")
+        self.rule_engine = RuleEngine(rules_path)
         
         # Test data from test_rulebase_engine.py
         self.device_control_tests = [

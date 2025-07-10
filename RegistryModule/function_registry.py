@@ -120,7 +120,7 @@ class FunctionRegistry:
                     "functions": {}
                 }
 
-            # Store parameter info in format matching Registration.json
+            # Store parameter info in format matching RegistrationTemplate.json
             param_info = []
             for param_name, param_details in parameter_schema.get("properties", {}).items():
                 param_type = param_details.get("type", "string")
@@ -568,7 +568,7 @@ class FunctionRegistry:
 # Example usage
 if __name__ == "__main__":
     # Create a registry
-    registry = FunctionRegistry(verbose=True, json_registry_path="Registration.json")
+    registry = FunctionRegistry(verbose=True, json_registry_path="register.json")
 
     # Example functions
     def windows_operation(window_obj: str, height: float):

@@ -16,7 +16,7 @@ from typing import Tuple, Dict, Any
 class MockRouter:
     """Mock router that simulates IntentRouter without LLM dependencies"""
     
-    def __init__(self, rules_path: str = "RuleBaseEngine/Rules.json"):
+    def __init__(self, rules_path: str = None):
         """
         Initialize the Mock Router with rule engine only
         
@@ -24,6 +24,12 @@ class MockRouter:
             rules_path: Path to the Rules.json file
         """
         try:
+            # Set default rules path if not provided
+            if rules_path is None:
+                # Get the parent directory path and construct the rules path
+                parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                rules_path = os.path.join(parent_dir, "RuleBaseEngine", "Rules.json")
+
             # Initialize rule engine
             self.rule_engine = RuleEngine(rules_path)
             

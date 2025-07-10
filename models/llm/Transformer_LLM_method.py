@@ -59,7 +59,7 @@ def phi_test():
 
 
 def qwen_test(thinking:bool=True) -> dict:
-    model_name = "./Qwen3-0.6B"
+    model_name = "./Qwen3-1.7B"
     # load the tokenizer and the model
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     config_q8 = BitsAndBytesConfig(
@@ -115,6 +115,6 @@ def qwen_test(thinking:bool=True) -> dict:
     return result
 
 if __name__ == "__main__":
-    # test_output = qwen_test(thinking=False)
-    test_output = phi_test()
+    test_output = qwen_test(thinking=True)
+    # test_output = phi_test()
     print(test_output)

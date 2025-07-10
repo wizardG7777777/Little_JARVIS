@@ -22,9 +22,15 @@ Test Categories:
 """
 
 import os
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
+
+# Add current directory to Python path for imports
+current_dir = Path(__file__).parent
+sys.path.insert(0, str(current_dir))
+
 from chatbot_calling import call_local
 
 class ChatBotTester:

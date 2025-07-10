@@ -310,3 +310,16 @@ def enhanced_chat(user_input):
 4. 配置参数是否正确
 
 更多技术细节请参考源代码注释和测试用例。
+
+# Update
+## 任务
+不修改LocalChatBot.py的调用逻辑的前提下，完成以下任务
+### 修复batch
+在不使用新的库的前提下，修复batch函数中存在的错误和警告，建议使用列表承载user query 
+### API 路由
+在FunctionCalling_router.py中实现一个方法，要求按照registry.json中的内容执行函数调用
+### 模拟函数调用
+在SystemTest文件夹内编写一个假API调用类，要求仅编写和registry.json内部所有的方法同名的API，其内部不执行任何逻辑，仅判断传入参数的类型是否合规
+### API调用逻辑及测试
+用户输入 -> IntentRouter -> RuleBaseEngine -> IntentRouter -> LocalChatBot -> FunctionCalling_router -> API
+请在SystemTest内部使用unit test编写一个测试文件，完成用户输入到API调用的测试，要求尽量不修改RuleBaseEngine和LocalChatBot内部的逻辑

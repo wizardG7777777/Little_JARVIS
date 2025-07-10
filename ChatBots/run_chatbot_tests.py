@@ -16,15 +16,19 @@ import sys
 import os
 from pathlib import Path
 
-# Add the current directory to Python path to ensure imports work
+# Add the current directory and parent directory to Python path
 current_dir = Path(__file__).parent
+parent_dir = current_dir.parent
 sys.path.insert(0, str(current_dir))
+sys.path.insert(0, str(parent_dir))
 
 try:
     from test_chatbot_responses import ChatBotTester
 except ImportError as e:
     print(f"Error importing test module: {e}")
     print("Please ensure test_chatbot_responses.py is in the same directory")
+    print(f"Current directory: {current_dir}")
+    print(f"Python path: {sys.path[:3]}")
     sys.exit(1)
 
 def main():
