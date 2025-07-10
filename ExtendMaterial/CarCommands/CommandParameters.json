@@ -1,0 +1,116 @@
+[
+  {
+    "command": "打开车窗",
+    "API_calling": "window_control",
+    "parameters": ["action:str='open'", "window_part:str='all'"],
+    "comment": "行驶中操作可能分散注意力或导致安全风险。window_control API参数：action表示操作类型（open/close），window_part指定车窗位置（driver/passenger/rear/all），默认为全车车窗。"
+  },
+  {
+    "command": "关闭车窗",
+    "API_calling": "window_control",
+    "parameters": ["action:str='close'", "window_part:str='all'"],
+    "comment": "行驶中操作可能因分心或误触引发安全隐患。参数同打开车窗，action固定为close。"
+  },
+  {
+    "command": "紧急避让操作",
+    "API_calling": "trigger_emergency_avoidance",
+    "parameters": [],
+    "comment": "手动干预自动驾驶系统可能导致系统冲突或误判。无参数API，直接触发避让程序。"
+  },
+  {
+    "command": "修改行驶路线",
+    "API_calling": "update_navigation_route",
+    "parameters": ["new_destination:str"],
+    "comment": "行驶中调整路线可能增加分心风险。new_destination为目标地址字符串（如'北京市朝阳区798艺术区'）。"
+  },
+  {
+    "command": "调整自动驾驶跟车距离",
+    "API_calling": "adjust_autopilot_setting",
+    "parameters": ["parameter:str='follow_distance'", "value:int"],
+    "comment": "高速或拥堵路段调整参数可能引发系统误判。parameter固定为'follow_distance'，value为1-5档整数。"
+  },
+  {
+    "command": "启用特斯拉“召唤”功能",
+    "API_calling": "activate_summon",
+    "parameters": ["direction:str='forward'"],
+    "comment": "自动泊车或召唤时需确保环境安全。direction指定移动方向（forward/backward），默认为前进。"
+  },
+  {
+    "command": "观看车载视频",
+    "API_calling": "play_media",
+    "parameters": ["media_type:str='video'", "resource_id:str"],
+    "comment": "严重分散注意力。media_type固定为'video'，resource_id为视频资源标识符。"
+  },
+  {
+    "command": "切换驾驶模式（节能/运动）",
+    "API_calling": "switch_driving_mode",
+    "parameters": ["mode:str"],
+    "comment": "动力输出变化可能影响稳定性。mode接受模式名称（如'eco'/'sport'）。"
+  },
+  {
+    "command": "查询实时路况",
+    "API_calling": "get_traffic_info",
+    "parameters": ["route_id:str='current'"],
+    "comment": "频繁查看可能短暂分心。route_id指定路线标识符，默认查询当前路线。"
+  },
+  {
+    "command": "语音搜索附近餐厅",
+    "API_calling": "voice_search",
+    "parameters": ["query:str"],
+    "comment": "复杂指令可能增加分心风险。query为搜索关键词字符串（如'附近川菜馆'）。"
+  },
+  {
+    "command": "调整空调温度",
+    "API_calling": "set_climate_control",
+    "parameters": ["target:str='temperature'", "value:float", "zone:str='all'"],
+    "comment": "基础操作但频繁调整可能分心。target固定为'temperature'，value为温度值，zone指定控制区域。"
+  },
+  {
+    "command": "设置导航目的地",
+    "API_calling": "set_navigation_destination",
+    "parameters": ["destination:str"],
+    "comment": "destination为目标地址字符串（如'上海外滩'）。"
+  },
+  {
+    "command": "播放音乐",
+    "API_calling": "play_media",
+    "parameters": ["media_type:str='music'", "resource_id:str"],
+    "comment": "media_type固定为'music'，resource_id为音乐资源标识符。"
+  },
+  {
+    "command": "查看电池电量",
+    "API_calling": "get_vehicle_status",
+    "parameters": ["status_type:str='battery'"],
+    "comment": "仅监控车辆状态。status_type固定为'battery'。"
+  },
+  {
+    "command": "远程启动空调",
+    "API_calling": "remote_control",
+    "parameters": ["operation:str='start_ac'", "temperature:float=22.0"],
+    "comment": "需车辆静止。operation固定为'start_ac'，temperature为预设温度，默认22℃。"
+  },
+  {
+    "command": "远程锁车",
+    "API_calling": "remote_control",
+    "parameters": ["operation:str='lock_doors'"],
+    "comment": "车辆静止时操作。operation固定为'lock_doors'。"
+  },
+  {
+    "command": "调整座椅加热",
+    "API_calling": "set_seat_heating",
+    "parameters": ["seat:str", "level:int"],
+    "comment": "seat指定座椅位置（driver/passenger），level为0-3档加热等级。"
+  },
+  {
+    "command": "安装第三方应用",
+    "API_calling": "manage_apps",
+    "parameters": ["action:str='install'", "app_id:str"],
+    "comment": "需车辆静止。action固定为'install'，app_id为应用商店标识符。"
+  },
+  {
+    "command": "调整氛围灯颜色",
+    "API_calling": "set_ambient_light",
+    "parameters": ["color:str"],
+    "comment": "color支持颜色名称（'blue'）或十六进制代码（'#FF0000'）。"
+  }
+]

@@ -1,0 +1,7 @@
+optimum[onnxruntime]
+onnx
+onnxruntime
+soundfile
+librosa
+datasets
+accelerate
