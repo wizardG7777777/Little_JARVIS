@@ -1,0 +1,138 @@
+{
+  "modules": [
+    {
+      "module_name": "battery_module",
+      "module_path": "/vehicle/systems/battery_module.py",
+      "functions": [
+        {
+          "function_name": "get_battery_status",
+          "parameters": []
+        }
+      ]
+    },
+    {
+      "module_name": "climate_module",
+      "module_path": "/vehicle/systems/climate_module.py",
+      "functions": [
+        {
+          "function_name": "set_cabin_temperature",
+          "parameters": [
+            {
+              "name": "temperature",
+              "type": "float"
+            },
+            {
+              "name": "zone",
+              "type": "str"
+            }
+          ]
+        },
+        {
+          "function_name": "activate_climate_preconditioning",
+          "parameters": [
+            {
+              "name": "enable",
+              "type": "bool"
+            },
+            {
+              "name": "target_temp",
+              "type": "float"
+            },
+            {
+              "name": "departure_time",
+              "type": "str"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_name": "navigation_module",
+      "module_path": "/vehicle/systems/navigation_module.py",
+      "functions": [
+        {
+          "function_name": "set_destination",
+          "parameters": [
+            {
+              "name": "location",
+              "type": "str"
+            },
+            {
+              "name": "waypoints",
+              "type": "list"
+            }
+          ]
+        },
+        {
+          "function_name": "find_charging_stations",
+          "parameters": [
+            {
+              "name": "radius_km",
+              "type": "int"
+            },
+            {
+              "name": "filter_by",
+              "type": "dict"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_name": "media_module",
+      "module_path": "/vehicle/systems/media_module.py",
+      "functions": [
+        {
+          "function_name": "play_media",
+          "parameters": [
+            {
+              "name": "media_type",
+              "type": "str"
+            },
+            {
+              "name": "source",
+              "type": "str"
+            },
+            {
+              "name": "content_id",
+              "type": "str"
+            }
+          ]
+        },
+        {
+          "function_name": "adjust_volume",
+          "parameters": [
+            {
+              "name": "level",
+              "type": "int"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module_name": "driving_module",
+      "module_path": "/vehicle/systems/driving_module.py",
+      "functions": [
+        {
+          "function_name": "get_driving_statistics",
+          "parameters": [
+            {
+              "name": "time_period",
+              "type": "str"
+            }
+          ]
+        },
+        {
+          "function_name": "set_driving_mode",
+          "parameters": [
+            {
+              "name": "mode",
+              "type": "str"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

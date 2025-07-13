@@ -11,6 +11,7 @@ English translation of Chinese terms:
 """
 import json
 from pathlib import Path
+import os
 import importlib.util
 import sys
 from typing import List, Dict, Any, Optional
@@ -24,7 +25,7 @@ except ImportError:
     # Simple fallback for basic string matching
     class SimpleFuzz:
         @staticmethod
-        def wratio(a, b):
+        def WRatio(a, b):
             # Simple similarity based on common characters
             if not a or not b:
                 return 0
@@ -42,7 +43,7 @@ except ImportError:
             # Simple extraction without rapidfuzz
             results = []
             for i, choice in enumerate(choices):
-                score = SimpleFuzz.wratio(query, choice)
+                score = SimpleFuzz.WRatio(query, choice)
                 results.append((choice, score, i))
             # Sort by score descending
             results.sort(key=lambda x: x[1], reverse=True)
@@ -183,21 +184,12 @@ class FunctionRegistry:
             search_targets.extend(targets)
 
         # Use RapidFuzz for fuzzy matching
-        if RAPIDFUZZ_AVAILABLE:
-            matches = process.extract(
-                query,
-                [target[0] for target in search_targets],
-                scorer=fuzz.WRatio,  # Use weighted ratio algorithm
-                limit=limit * 3  # Get more results for deduplication
-            )
-        else:
-            # Use simple fallback matching
-            matches = process.extract(
-                query,
-                [target[0] for target in search_targets],
-                scorer=fuzz.wratio,  # Use simple ratio algorithm
-                limit=limit * 3  # Get more results for deduplication
-            )
+        matches = process.extract(
+            query,
+            [target[0] for target in search_targets],
+            scorer=fuzz.WRatio,  # Use weighted ratio algorithm
+            limit=limit * 3  # Get more results for deduplication
+        )
 
         # Process matching results
         result_dict = {}
@@ -453,208 +445,3 @@ class function_calling_interface:
             List[Dict]: List of matching functions
         """
         return self.registry.semantic_search(query, limit=limit)
-
-    def route_function_call(self, user_query: str) -> tuple:
-        """
-        Route function call based on registry.json content
-
-        Args:
-            user_query: User input query string
-
-        Returns:
-            tuple: (success: bool, result: Any)
-                  success=True indicates successful routing and execution
-                  result is function return value or error message
-        """
-        try:
-            # First try with lower threshold for better matching
-            matching_functions = self.registry.semantic_search(user_query, limit=1, threshold=30.0)
-
-            if not matching_functions:
-                # Try keyword-based matching as fallback
-                best_match = self._keyword_based_matching(user_query)
-                if not best_match:
-                    return (False, f"Router: No matching function found for query: '{user_query}'")
-            else:
-                best_match = matching_functions[0]
-
-            function_name = best_match['full_name']
-
-            # Extract parameters from user query
-            parameters = self._extract_parameters_from_query(user_query, best_match)
-
-            # Call the function using the existing call_function method
-            return self.call_function((function_name, parameters))
-
-        except Exception as e:
-            return (False, f"Router: routing error - {str(e)}")
-
-    def _keyword_based_matching(self, user_query: str) -> dict:
-        """
-        Fallback keyword-based matching when fuzzy search fails
-
-        Args:
-            user_query: User input query
-
-        Returns:
-            dict: Best matching function info or None
-        """
-        query_lower = user_query.lower()
-
-        # Define keyword mappings for better matching
-        keyword_mappings = {
-            '温度': 'climate_module.set_cabin_temperature',
-            '空调': 'climate_module.activate_climate_preconditioning',
-            '音量': 'media_module.adjust_volume',
-            '播放': 'media_module.play_media',
-            '导航': 'navigation_module.set_destination',
-            '充电': 'navigation_module.find_charging_stations',
-            '电池': 'battery_module.get_battery_status',
-            '驾驶': 'driving_module.get_driving_statistics',
-            '模式': 'driving_module.set_driving_mode'
-        }
-
-        # Find best keyword match
-        for keyword, function_name in keyword_mappings.items():
-            if keyword in query_lower:
-                # Get function info from registry
-                func_info = self.registry.get_function_by_name(function_name)
-                if func_info:
-                    return self.registry._format_function_result(func_info)
-
-        return None
-
-    def _extract_parameters_from_query(self, user_query: str, function_info: dict) -> dict:
-        """
-        Extract parameters from user query based on function requirements
-        This is a simplified implementation - in practice would use LLM or NLP
-
-        Args:
-            user_query: User input query
-            function_info: Function information from registry
-
-        Returns:
-            dict: Extracted parameters
-        """
-        parameters = {}
-        expected_params = function_info.get('parameters', [])
-
-        # Simple parameter extraction based on function type
-        function_name = function_info.get('function_name', '')
-
-        try:
-            if 'temperature' in function_name.lower():
-                # Extract temperature value
-                import re
-                temp_match = re.search(r'(\d+(?:\.\d+)?)', user_query)
-                if temp_match:
-                    for param in expected_params:
-                        if param['name'] == 'temperature' or param['name'] == 'target_temp':
-                            parameters[param['name']] = float(temp_match.group(1))
-                        elif param['name'] == 'zone':
-                            parameters[param['name']] = "driver"  # Default zone
-                        elif param['name'] == 'enable':
-                            parameters[param['name']] = True
-                        elif param['name'] == 'departure_time':
-                            parameters[param['name']] = "08:00"  # Default time
-
-            elif 'volume' in function_name.lower():
-                # Extract volume level
-                import re
-                vol_match = re.search(r'(\d+)', user_query)
-                if vol_match:
-                    for param in expected_params:
-                        if param['name'] == 'level':
-                            parameters[param['name']] = int(vol_match.group(1))
-
-            elif 'destination' in function_name.lower():
-                # Extract location
-                for param in expected_params:
-                    if param['name'] == 'location':
-                        # Simple extraction - take text after common keywords
-                        import re
-                        location_match = re.search(r'(?:到|去|导航到|前往)\s*([^，。！？\s]+)', user_query)
-                        if location_match:
-                            parameters[param['name']] = location_match.group(1)
-                        else:
-                            parameters[param['name']] = "目的地"  # Default
-                    elif param['name'] == 'waypoints':
-                        parameters[param['name']] = []  # Empty waypoints
-
-            elif 'charging' in function_name.lower():
-                # Extract radius and filter
-                for param in expected_params:
-                    if param['name'] == 'radius_km':
-                        import re
-                        radius_match = re.search(r'(\d+)\s*(?:公里|km)', user_query)
-                        parameters[param['name']] = int(radius_match.group(1)) if radius_match else 10
-                    elif param['name'] == 'filter_by':
-                        parameters[param['name']] = {"type": "fast_charging"}  # Default filter
-
-            elif 'media' in function_name.lower() or 'play' in function_name.lower():
-                # Extract media parameters
-                for param in expected_params:
-                    if param['name'] == 'media_type':
-                        if '音乐' in user_query or '歌' in user_query:
-                            parameters[param['name']] = "music"
-                        else:
-                            parameters[param['name']] = "audio"
-                    elif param['name'] == 'source':
-                        parameters[param['name']] = "local"
-                    elif param['name'] == 'content_id':
-                        parameters[param['name']] = "default_content"
-
-            elif 'driving' in function_name.lower():
-                # Extract driving parameters
-                for param in expected_params:
-                    if param['name'] == 'time_period':
-                        if '今天' in user_query:
-                            parameters[param['name']] = "today"
-                        elif '本周' in user_query:
-                            parameters[param['name']] = "week"
-                        else:
-                            parameters[param['name']] = "today"
-                    elif param['name'] == 'mode':
-                        if '运动' in user_query or 'sport' in user_query.lower():
-                            parameters[param['name']] = "sport"
-                        elif '经济' in user_query or 'eco' in user_query.lower():
-                            parameters[param['name']] = "eco"
-                        else:
-                            parameters[param['name']] = "normal"
-
-            # Fill in any missing required parameters with defaults
-            for param in expected_params:
-                if param['name'] not in parameters:
-                    param_type = param.get('type', 'str')
-                    if param_type == 'str':
-                        parameters[param['name']] = "default_value"
-                    elif param_type == 'int':
-                        parameters[param['name']] = 0
-                    elif param_type == 'float':
-                        parameters[param['name']] = 0.0
-                    elif param_type == 'bool':
-                        parameters[param['name']] = True
-                    elif param_type == 'list':
-                        parameters[param['name']] = []
-                    elif param_type == 'dict':
-                        parameters[param['name']] = {}
-
-        except Exception as e:
-            # If parameter extraction fails, provide defaults
-            for param in expected_params:
-                if param['name'] not in parameters:
-                    param_type = param.get('type', 'str')
-                    if param_type == 'str':
-                        parameters[param['name']] = "default_value"
-                    elif param_type == 'int':
-                        parameters[param['name']] = 0
-                    elif param_type == 'float':
-                        parameters[param['name']] = 0.0
-                    elif param_type == 'bool':
-                        parameters[param['name']] = True
-                    elif param_type == 'list':
-                        parameters[param['name']] = []
-                    elif param_type == 'dict':
-                        parameters[param['name']] = {}
-
-        return parameters
